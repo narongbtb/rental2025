@@ -107,7 +107,7 @@
                 dialog :false,
                 action:"",
                 productDoc:{
-                    id:"",
+                    _id:"",
                     name:"",
                     price:"",
                     cost:""
@@ -148,9 +148,65 @@
                     vm.productList=res.data.data || [];
                 }
             },
+            async insertData(doc){
+                let vm=this;
+                const res=await axios({
+                    method:"post",
+                    url:"http://localhost:3000/product",
+                    headers:{
+                    },
+                    data:doc
+                    // data:{
+                    //     name:doc.name,
+                    //     price:doc.price,
+                    //     cost:doc.cost
+                    // }
+                })
+                console.log(res);
+                if(res.data.code==201){
+                    vm.fetchData();
+                }
+            },
+            async updateData(doc){
+                let vm=this;
+                console.log(doc);
+                const res=await axios({
+                    method:"post",
+                    url:"http://localhost:3000/product/update",
+                    headers:{
+                    },
+                    data:doc
+                    // data:{
+                    //     name:doc.name,
+                    //     price:doc.price,
+                    //     cost:doc.cost
+                    // }
+                })
+                console.log(res);
+                if(res.data.code==201){
+                    vm.fetchData();
+                }
+            },
+            
+            async removeData(id){
+                let vm=this;
+                const res=await axios({
+                    method:"post",
+                    url:"http://localhost:3000/product/delete",
+                    headers:{
+                    },
+                    data:{
+                        id:id
+                    }
+                })
+                console.log(res);
+                if(res.data.code==201){
+                    vm.fetchData();
+                }
+            },
             gotoDetail(doc){
                 let vm=this;
-                vm.$router.push({name:"productDetail",params:{id:doc.id,name:doc.name,price:doc.price}});
+                vm.$router.push({name:"productDetail",params:{id:doc._id,name:doc.name,price:doc.price}});
             },
             handleAdd() {
                 let vm=this;
@@ -167,14 +223,14 @@
                 vm.productDoc.name=data.name;
                 vm.productDoc.price=data.price;
                 vm.productDoc.cost=data.cost;
-                vm.productDoc.id=data.id;
+                vm.productDoc._id=data._id;
                 console.log(data);
             },
             handleRemove(doc){
                     let vm=this;
                     Swal.fire({
                         title: "Are you sure?",
-                        text: "You want to delete this Product Id "+doc.id,
+                        text: "You want to delete this Product Id "+doc._id,
                         icon: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#3085d6",
@@ -182,10 +238,11 @@
                         confirmButtonText: "Yes, delete it!"
                     }).then((result) => {
                     if (result.isConfirmed) {
-                        let ind=vm.productList.findIndex(d=>d.id==doc.id);
-                        if (ind !== -1) {
-                            vm.productList.splice(ind, 1);
-                        }
+                        // let ind=vm.productList.findIndex(d=>d._id==doc._id);
+                        // if (ind !== -1) {
+                        //     vm.productList.splice(ind, 1);
+                        // }
+                        vm.removeData(doc._id);
                         Swal.fire({
                             title: "Deleted!",
                             text: "Your file has been deleted.",
@@ -212,15 +269,17 @@
                     console.log(res.valid)
                     if(res.valid){
                         // Insert Data
-                        if(vm.productDoc.id==""){
+                        if(vm.productDoc._id==""){
                             let productObj=Object.assign({},vm.productDoc);
-                            vm.productList.push(productObj);
-                           
+                            // vm.productList.push(productObj);
+                            vm.insertData(productObj);
                         }else{
                         // Update Data
                               let productObj=Object.assign({},vm.productDoc);
-                              let ind=vm.productList.findIndex(d=>d.id==productObj.id);
-                              vm.productList[ind]=productObj;
+                            //   let ind=vm.productList.findIndex(d=>d._id==productObj._id);
+                            //   vm.productList[ind]=productObj;
+                            productObj.id=productObj._id;
+                            vm.updateData(productObj);
 
                         }
                         vm.dialog = false;
