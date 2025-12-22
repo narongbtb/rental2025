@@ -12,6 +12,7 @@
     "@mdi/font": "5.9.55",
     "axios": "^1.13.2",
     "core-js": "^3.8.3",
+    "pinia": "^3.0.4",
     "roboto-fontface": "*",
     "sweetalert2": "^11.26.3",
     "vue": "^3.2.13",

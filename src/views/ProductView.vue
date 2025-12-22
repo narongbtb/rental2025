@@ -135,7 +135,7 @@
                 let vm=this;
                 const res=await axios({
                     method:"get",
-                    url:"http://localhost:3000/product/fetch",
+                    url:process.env.VUE_APP_BACKEND_URL+"/product/fetch",
                     headers:{
                     },
                     params:{
@@ -152,7 +152,7 @@
                 let vm=this;
                 const res=await axios({
                     method:"post",
-                    url:"http://localhost:3000/product",
+                    url:process.env.VUE_APP_BACKEND_URL+"/product",
                     headers:{
                     },
                     data:doc
